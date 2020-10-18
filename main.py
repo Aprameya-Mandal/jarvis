@@ -6,8 +6,7 @@ import webbrowser
 import os
 import sys
 import random
-import time
-from playsound import playsound # pip install playsound
+from playsound import playsound  # pip install playsound
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
@@ -94,18 +93,23 @@ def execommand(query):
         speak(results)
 
     elif 'open youtube' in query:
+        speak("Opening")
         webbrowser.open("youtube.com")
 
     elif 'open google' in query:
+        speak("Opening")
         webbrowser.open("google.com")
 
     elif 'open stackoverflow' in query:
+        speak("Opening")
         webbrowser.open("stackoverflow.com")
 
     elif 'play music' in query:
         music_dir = 'C:\\Users\\Mita\\Desktop\\FileBrowser\\Music'
         songs = os.listdir(music_dir)
-        playsound(music_dir + '\\' + songs[random.randint(0, 11)])
+        random_music = songs[random.randint(0, 11)]
+        speak("Playing" + random_music)
+        playsound(music_dir + '\\' + random_music)
 
     elif 'the time' in query:
         strTime = datetime.datetime.now().strftime("%H:%M:%S")
@@ -115,16 +119,16 @@ def execommand(query):
         codePath = "C:\\Users\\Mita\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
         os.startfile(codePath)
 
-    elif 'wait for ' in query:
-        query = query.replace('wait for ', '')
-        if ' second' or ' seconds' in query:
-            query = query.replace(' seconds', '')
-            query = query.replace(' second', '')
-            time.sleep(int(query))
-        elif ' minute' or ' minutes' in query:
-            query = query.replace(' minutes', '')
-            query = query.replace(' minute', '')
-            time.sleep(int(query) * 60)
+    elif 'open pycharm' in query:
+        pycharmPath = "C:\\Program Files\\JetBrains\\PyCharm Community Edition 2020.2.2\\bin\\pycharm64.exe"
+        os.startfile(pycharmPath)
+
+    elif 'open idol' in query:
+        idlePath = "C:\\Users\\Mita\\AppData\\Local\\Programs\\Python\\Python39\\Lib\\idlelib\\idle.pyw"
+        os.startfile(idlePath)
+
+    elif "pause" in query:
+        input("To start you can press enter...")
 
     elif 'quit' or 'exit' == query:
         sys.exit()
@@ -134,6 +138,11 @@ if __name__ == "__main__":
     speak("Hello sir")
     wishMe()
     while True:
-        query = recognize_speech_from_mic(sr.Recognizer(), sr.Microphone())["transcription"].lower()
-        print("User said: ", query)
-        execommand(query)
+        query = recognize_speech_from_mic(sr.Recognizer(), sr.Microphone())["transcription"]
+        if query is not None:
+            query = query.lower()
+            print("User said: ", query)
+            execommand(query)
+        else:
+            print("So sorry.. Didn't catch that.")
+            print("Say that again please...")
